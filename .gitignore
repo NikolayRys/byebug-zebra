@@ -1,0 +1,5 @@
+/.bundle/
+/spec/reports/
+
+# rspec failure tracking
+.rspec_status
