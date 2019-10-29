@@ -32,4 +32,5 @@ Gem::Specification.new do |spec|
   # This dependency is a requirement, but it extends pry too, so we need to test it
   spec.add_development_dependency 'pry-byebug', '~> 3.7'
   spec.add_dependency 'byebug', '~> 11.0'
+  spec.add_dependency 'colorize', '~> 0.8'
 end
