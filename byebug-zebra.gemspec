@@ -1,16 +1,16 @@
 lib = File.expand_path("lib", __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'byebug-smarttrace/version'
+require 'byebug-zebra/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'byebug-smarttrace'
-  spec.version       = Byebug::Smarttrace::VERSION
+  spec.name          = 'byebug-zebra'
+  spec.version       = Byebug::Zebra::VERSION
   spec.authors       = ['Nikolay Rys']
   spec.email         = ['nikolay@rys.me']
 
   spec.summary       = 'Adds smart navigation over backtrace to Byebug and Pry.'
   spec.description   = 'Makes byebug aware of project directory structure and used libraries, allowing to jump between them.'
-  spec.homepage      = 'https://github.com/NikolayRys/byebug-smarttrace'
+  spec.homepage      = 'https://github.com/NikolayRys/byebug-zebra'
   spec.license       = 'MIT'
 
   spec.metadata['homepage_uri'] = spec.homepage
@@ -29,7 +29,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'rspec', '~> 3.0'
 
-  # This dependency is a requirement, but it extends pry too, so we need to test it
+  # This dependency is noy a requirement, but it extends pry too, so we need to test it
   spec.add_development_dependency 'pry-byebug', '~> 3.7'
   spec.add_dependency 'byebug', '~> 11.0'
   spec.add_dependency 'colorize', '~> 0.8'
