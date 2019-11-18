@@ -2,10 +2,11 @@ require 'colorized_string'
 
 module ByebugZebra
   module Buybug
-    class AnsiPrinter
+    class Printer
 
-      def initialize(frames)
-        @frames = frames
+      def initialize(stack_size, &frame_block)
+        @stack_size = stack_size
+        @frame_block = frame_block
         @odd_scheme = { color: config.odd_color, background: config.even_color }
         @even_scheme = { color: config.even_color, background: config.odd_color }
         @has_unknown_origin = false
@@ -15,7 +16,8 @@ module ByebugZebra
         current_origin = nil
         current_oddness = false
 
-        @frames.each do |frame|
+        @stack_size.times do |i|
+          frame = @frame_block.call(i)
           if current_origin != frame.origin
             current_oddness = !current_oddness
             current_origin = frame.origin
@@ -33,21 +35,27 @@ module ByebugZebra
         origin, info_str = analyze_origin(frame.file, INFO_TEMPLATE % frame_data)
         num_content = "##{frame_data[:pos]}"
         num_str = colorize(num_content, odd ? @odd_scheme : @even_scheme)
-        "#{frame_data[:mark]} #{num_str} #{info_str} from #{origin}"
+        "#{frame_data[:mark]} #{num_str} #{info_str} by #{origin}"
       end
 
       def analyze_origin(frame_file, info_content)
         abs_path = File.expand_path(frame_file)
-         if abs_path.include?(config.root)
-          ['APPLICATION', ColorizedString[info_content].bold]
-         else
-           identified_gem_spec_pair = Gem.loaded_specs.detect{|_name, spec| abs_path.include? (spec.full_gem_path) }
-           if identified_gem_spec_pair
-             [identified_gem_spec_pair.first, info_content]
-           else
-             @has_unknown_origin = true
-             ['UNKNOWN', to_warn(info_content)]
-           end
+        known_origin_pair = config.known_libs.detect{|_name, path| abs_path.include?(path)}
+
+        if known_origin_pair
+          { origin: "LIB: #{known_origin_pair.first}", info_str: info_content }
+        else
+          if abs_path.include?(config.root)
+            { origin: 'APPLICATION', info_str: ColorizedString[info_content].bold }
+          else
+            identified_gem_spec_pair = Gem.loaded_specs.detect{|_name, spec| abs_path.include?(spec.full_gem_path) }
+            if identified_gem_spec_pair
+              { origin: "GEM: #{identified_gem_spec_pair.first}", info_str: info_content }
+            else
+              @has_unknown_origin = true
+              { origin: 'UNKNOWN', info_str: to_warn(info_content) }
+            end
+          end
         end
       end
 
