@@ -16,8 +16,8 @@ module ByebugZebra
     end
 
     ROOT_WARNING = <<-DESCRIPTION
-WARNING: application root directory is not set, using Dir.pwd. Specify the correct root:
-         ByebugZebra.config do |config|
+WARNING: application root directory is not set, using Dir.pwd. 
+EXAMPLE: ByebugZebra.config do |config|
            config.root = '/abs/path/to/your/app'
          end
     DESCRIPTION
