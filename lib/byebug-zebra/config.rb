@@ -22,9 +22,8 @@ WARNING: application root directory is not set, using Dir.pwd. Specify the corre
          end
     DESCRIPTION
 
-    def enforce_root!
+    def ensure_root!
       unless @root
-
         print(color ? ColorizedString[ROOT_WARNING].colorize(warn_color) : ROOT_WARNING)
         @root = Dir.pwd
       end
