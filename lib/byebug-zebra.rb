@@ -1,6 +1,7 @@
 require 'byebug-zebra/version'
 require 'byebug-zebra/config'
-require 'byebug-zebra/byebug/printer'
+require 'byebug-zebra/byebug_printer'
+require 'byebug-zebra/normalizer'
 require 'byebug/zebra_command'
 #require 'pry/z_command' if defined? PryByebug
 
