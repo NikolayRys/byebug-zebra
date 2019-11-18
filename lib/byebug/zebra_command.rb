@@ -2,32 +2,38 @@
 require 'byebug/command'
 require 'byebug/helpers/frame'
 
-module Smarttrace
-  #
-  # Show current backtrace with .
-  #
-  class ByebugSmarttrace < Byebug::Command
-    include Helpers::FrameHelper
+
+require 'pry'
+
+module Byebug
+  # Show current backtrace with additional information about the source libraries.
+  class ZebraCommand < Byebug::Command
+    include Byebug::Helpers::FrameHelper
 
     self.allow_in_post_mortem = true
 
     def self.regexp
-      /^\s* (st|smarttrace) \s*$/x
+      /^\s* (z|zeb|zebra) \s*$/x
     end
 
     def self.description
       <<-DESCRIPTION
-        st|backtrace
+        z|zeb|zebra
 
         #{short_description}
 
-        Improved version of the where/backtrace command. 
+        #{'Requires ByebugZebra.app_root to be set to work properly!'}
+
+        Improved version of the where/backtrace command. Originates from byebug-zebra gem.
+
         Print the entire stack frame. Each frame is numbered; the most recent
         frame is 0. A frame number can be referred to in the "frame" command.
         "up" and "down" add or subtract respectively to frame numbers shown.
         The position of the current frame is marked with -->. C-frames hang
         from their most immediate Ruby frame to indicate that they are not
         navigable.
+
+        You can adjust colors and library paths.
       DESCRIPTION
     end
 
@@ -36,17 +42,13 @@ module Smarttrace
     end
 
     def execute
-      print_backtrace
+      config.enforce_root!
+      ByebugZebra::Buybug::Printer.new(context.stack_size){ |index| Frame.new(context, index) }.print_striped_backtrace
     end
 
     private
-
-    def print_backtrace
-      bt = prc("frame.line_with_lib", (0...context.stack_size)) do |_, index|
-        Frame.new(context, index).to_hash
-      end
-
-      print(bt)
+    def config
+      ByebugZebra.config
     end
   end
 end
