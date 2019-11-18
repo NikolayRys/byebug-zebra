@@ -2,9 +2,6 @@
 require 'byebug/command'
 require 'byebug/helpers/frame'
 
-
-require 'pry'
-
 module Byebug
   # Show current backtrace with additional information about the source libraries.
   class ZebraCommand < Byebug::Command
@@ -42,8 +39,8 @@ module Byebug
     end
 
     def execute
-      config.enforce_root!
-      ByebugZebra::Buybug::Printer.new(context.stack_size){ |index| Frame.new(context, index) }.print_striped_backtrace
+      config.ensure_root!
+      ::ByebugZebra::ByebugPrinter.new(context.stack_size){ |index| Frame.new(context, index) }.print_striped_backtrace
     end
 
     private
