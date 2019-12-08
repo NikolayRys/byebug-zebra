@@ -30,7 +30,7 @@ module Byebug
         from their most immediate Ruby frame to indicate that they are not
         navigable.
 
-        You can adjust colors and library paths.
+        You can adjust colors and add your own library locations.
       DESCRIPTION
     end
 
@@ -40,6 +40,7 @@ module Byebug
 
     def execute
       config.ensure_root!
+      # We are not using simply context.backtrace to preserve byebug's ignored_files feature
       ::ByebugZebra::ByebugPrinter.new(context.stack_size){ |index| Frame.new(context, index) }.print_striped_backtrace
     end
 
