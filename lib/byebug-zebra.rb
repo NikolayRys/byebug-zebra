@@ -9,8 +9,6 @@ require 'byebug/zebra_command'
 # class Error < StandardError; end
 
 module ByebugZebra
-  # TODO: make configuration more consistent
-
   def self.config
     @config ||= Config.new
     block_given? ? yield(@config) : @config
