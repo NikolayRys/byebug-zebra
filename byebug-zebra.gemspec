@@ -33,6 +33,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'colorize', '~> 0.8'
   spec.add_dependency 'tty-prompt', '~> 0.20'
 
-  # This dependency is not a requirement, but it extends pry as well, so we need to test it
+  # This dependency is not a requirement, but since we extend pry as well, we need to test it
   spec.add_development_dependency 'pry-byebug', '~> 3.7'
 end
