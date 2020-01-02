@@ -19,7 +19,7 @@ module Byebug
 
         #{short_description}
 
-        #{'Requires ByebugZebra.app_root to be set to work properly!'}
+        #{'Requires ByebugZebra.root to be set to work properly!'}
 
         Improved version of the where/backtrace command. Originates from byebug-zebra gem.
 
@@ -39,8 +39,8 @@ module Byebug
     end
 
     def execute
+      Byebug::Context.ignored_files = [] # We are handling ignoring on our own
       config.ensure_root!
-      # We are not using simply context.backtrace to preserve byebug's ignored_files feature
       ::ByebugZebra::ByebugPrinter.new(context.stack_size){ |index| Frame.new(context, index) }.print_striped_backtrace
     end
 
