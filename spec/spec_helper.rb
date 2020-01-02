@@ -1,5 +1,5 @@
 require 'bundler/setup' # TODO: do we need it?
-require 'byebug/smarttrace'
+require 'byebug-zebra'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
