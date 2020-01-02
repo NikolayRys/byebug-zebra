@@ -1,4 +1,5 @@
 require 'colorized_string'
+require 'tty-prompt'
 
 module ByebugZebra
   class ByebugPrinter
@@ -39,10 +40,14 @@ DESCRIPTION
       odd = false
       unknown_detected = false
 
+      @origins = []
+
       parsed_frames = []
       @stack_size.times do |i|
         frame = @frame_block.call(i)
         origin = analyze_origin(frame)
+        @origins << origin
+
         unknown_detected = true if origin.first == :unknown
         odd = !odd unless origin == prev_origin
         prev_origin = origin
@@ -50,6 +55,15 @@ DESCRIPTION
       end
       puts ColorizedString[ORIGIN_WARNING].colorize(config.warn_color) if unknown_detected
       parsed_frames.each { |frame_args| print_frame_line(*frame_args) }
+
+
+      TTY::Prompt.new.multi_select('Which sources should zebra ignore?', cycle: true) do |menu|
+        menu.default 1
+
+        @origins.uniq.each do |origin|
+          menu.choice origin
+        end
+      end
     end
 
     private
@@ -75,13 +89,13 @@ DESCRIPTION
     end
 
     # TODO: move out to analyzer
-    def subpath?(target_path, root_path)
+    def belongs?(target_path, root_path)
       # Is this exactly this file or a file in subdirectory
       target_path.fnmatch?("#{root_path}{#{File::SEPARATOR}**,}", File::FNM_EXTGLOB)
     end
 
     def stdlib?(frame_path)
-      if subpath?(frame_path, STDLIB_DIR)
+      if belongs?(frame_path, STDLIB_DIR)
         internal_subpath = frame_path.relative_path_from(STDLIB_DIR).to_s
         config.stdlib_names.detect{|name| internal_subpath.start_with?(name)}
       end
@@ -91,15 +105,15 @@ DESCRIPTION
       frame_path = Pathname.new(frame.file)
       if frame.c_frame?
         [:native, frame.file]
-      elsif origin_pair = config.known_libs.detect{|_name, lib_path| subpath?(frame_path, lib_path)}
+      elsif origin_pair = config.known_libs.detect{|_name, lib_path| belongs?(frame_path, lib_path)}
         [:lib, origin_pair.first]
-      elsif subpath?(frame_path, config.root)
+      elsif belongs?(frame_path, config.root)
         [:application]
-      elsif gem_pair = @external_gems.detect{|_name, gem_path| subpath?(frame_path, gem_path) }
+      elsif gem_pair = @external_gems.detect{|_name, gem_path| belongs?(frame_path, gem_path) }
         [:gem, gem_pair.first]
       elsif std_name = stdlib?(frame_path)
         [:stdlib, std_name]
-      elsif subpath?(frame_path, RUBY_DIR)
+      elsif belongs?(frame_path, RUBY_DIR)
         [:core, frame.file]
       else
         [:unknown, frame.file]
