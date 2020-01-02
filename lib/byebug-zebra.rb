@@ -1,7 +1,6 @@
 require 'byebug-zebra/version'
 require 'byebug-zebra/config'
 require 'byebug-zebra/byebug_printer'
-require 'byebug-zebra/path_normalizer'
 require 'byebug/zebra_command'
 #require 'pry/z_command' if defined? PryByebug
 
@@ -9,8 +8,17 @@ require 'byebug/zebra_command'
 # class Error < StandardError; end
 
 module ByebugZebra
-  def self.config
-    @config ||= Config.new
-    block_given? ? yield(@config) : @config
+
+  class << self
+    def config
+      @config ||= Config.new
+      block_given? ? yield(@config) : @config
+    end
+
+    attr_reader :ignored_origins
+
+    def ignored_orirings
+      @ignored_origins ||= []
+    end
   end
 end
