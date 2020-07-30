@@ -17,9 +17,9 @@ module Byebug
       <<-DESCRIPTION
         z|zeb|zebra
 
-        #{short_description}
+        Displays the backtrace with the origin of each frame
 
-        #{'Requires ByebugZebra.root to be set to work properly!'}
+        #{'Requires ByebugZebra.root to be configured!'}
 
         Improved version of the where/backtrace command. Originates from byebug-zebra gem.
 
@@ -34,14 +34,10 @@ module Byebug
       DESCRIPTION
     end
 
-    def self.short_description
-      'Displays the backtrace with the origin of each frame'
-    end
-
     def execute
       Byebug::Context.ignored_files = [] # We are handling ignoring on our own
       config.ensure_root!
-      ::ByebugZebra::ByebugPrinter.new(context.stack_size){ |index| Frame.new(context, index) }.print_striped_backtrace
+      ::ByebugZebra::ByebugPrinter.new(context).print_striped_backtrace
     end
 
     private
