@@ -1,8 +1,4 @@
-# TODO: avoid preloading here
-# lib = File.expand_path("lib", __dir__)
-# $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-
-require 'byebug-zebra/version'
+require File.dirname(__FILE__) + '/lib/byebug-zebra/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'byebug-zebra'
