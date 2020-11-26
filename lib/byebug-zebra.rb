@@ -17,7 +17,7 @@ module ByebugZebra
 
     attr_reader :ignored_origins
 
-    def ignored_orirings
+    def ignored_origins
       @ignored_origins ||= []
     end
   end
