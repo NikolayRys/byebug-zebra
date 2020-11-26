@@ -1,5 +1,7 @@
-lib = File.expand_path("lib", __dir__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+# TODO: avoid preloading here
+# lib = File.expand_path("lib", __dir__)
+# $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+
 require 'byebug-zebra/version'
 
 Gem::Specification.new do |spec|
@@ -8,8 +10,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Nikolay Rys']
   spec.email         = ['nikolay@rys.me']
 
-  spec.summary       = 'Adds smart navigation over backtrace to Byebug and Pry.'
-  spec.description   = 'Makes byebug aware of project directory structure and used libraries, allowing to jump between them.'
+  spec.summary       = 'Smart backtrace navigation for Byebug and Pry.'
+  spec.description   = 'Makes byebug and pry aware of project directory structure and used libraries, allowing to jump between them.'
   spec.homepage      = 'https://github.com/NikolayRys/byebug-zebra'
   spec.license       = 'MIT'
 
