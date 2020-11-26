@@ -35,7 +35,7 @@ module Byebug
     end
 
     def execute
-      Byebug::Context.ignored_files = [] # We are handling ignoring on our own
+      Byebug::Context.ignored_files = [] # We are managing ignoring on our own
       config.ensure_root!
       ::ByebugZebra::ByebugPrinter.new(context).print_striped_backtrace
     end
