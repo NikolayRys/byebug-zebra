@@ -46,7 +46,6 @@ DESCRIPTION
       @stack_size.times do |i|
         frame = @frame_block.call(i)
         origin = analyze_origin(frame)
-        @origins << origin
 
         unknown_detected = true if origin.first == :unknown
         odd = !odd unless origin == prev_origin
@@ -56,14 +55,6 @@ DESCRIPTION
       puts ColorizedString[ORIGIN_WARNING].colorize(config.warn_color) if unknown_detected
       parsed_frames.each { |frame_args| print_frame_line(*frame_args) }
 
-
-      TTY::Prompt.new.multi_select('Which sources should zebra ignore?', cycle: true) do |menu|
-        menu.default 1
-
-        @origins.uniq.each do |origin|
-          menu.choice origin
-        end
-      end
     end
 
     private
