@@ -39,6 +39,8 @@ module ByebugZebra
         [:gem, gem_pair.first]
       elsif false
         # TODO: Add vendor gems detection
+      elsif false
+        # TODO: Add bins detection /Users/nikolay/.rvm/gems/ruby-2.7.2/bin/* (try with https://github.com/rvm/executable-hooks)
       elsif (std_name = detect_stdlib_name(frame_path))
         [:stdlib, std_name]
       elsif belongs_to_path?(frame_path, RUBY_DIR)
