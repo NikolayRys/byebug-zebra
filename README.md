@@ -1,7 +1,7 @@
 # ByebugZebra
 ![logo.png](logo.png)
 
-Start stack trace analyzer and navigator, for Byebug, Pry and PryByebug. Alpha version.
+Start stack trace analyzer and navigator for Byebug, Pry and PryByebug. Alpha version.
 
 ## Installation
 
@@ -12,14 +12,6 @@ require 'byebug'
 require 'byebug-zebra'
 ```
 
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install byebug-zebra
-
 ## Usage
 Place a debugger statement:
 ```
@@ -27,7 +19,7 @@ Place a debugger statement:
 byebug
 # some more code
 ```
-When the execution stops, just type `zebra` to see analyzed backtrace for the current positionn
+When the execution stops, just type `zebra` to see analyzed backtrace for the current position.
 
 # Configuration
 If you have dependencies in usual custom paths, you can let Zebra know through the config.
