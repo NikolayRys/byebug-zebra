@@ -4,7 +4,6 @@
 # rspec failure tracking
 .rspec_status
 
-todo.md
 Gemfile.lock
 
 .byebug_history
