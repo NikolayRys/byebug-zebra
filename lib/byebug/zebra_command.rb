@@ -7,6 +7,7 @@ module Byebug
   class ZebraCommand < Byebug::Command
     include Byebug::Helpers::FrameHelper
 
+    # Analysis is enabled, but navigation has to be disabled in post_mortem
     self.allow_in_post_mortem = true
 
     def self.regexp
@@ -46,5 +47,3 @@ module Byebug
     end
   end
 end
-
-
