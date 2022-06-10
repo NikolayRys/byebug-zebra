@@ -33,7 +33,7 @@ TEXT
       }
     end
 
-    def print_zebra
+    def print_zebra_stacktrace
       prev_origin = nil
       odd = false
       unknown_detected = false
@@ -69,7 +69,7 @@ TEXT
     TTY_COUNT_OFFSET = 1
 
     def filter_prompt
-      selection = TTY::Prompt.new.multi_select('Which sources should zebra ignore?', cycle: true) do |menu|
+      selection = TTY::Prompt.new.multi_select('Which sources should zebra ignore?', cycle: true, quiet: true) do |menu|
         preselected = []
         @origins.uniq.each.with_index(TTY_COUNT_OFFSET) do |origin, index|
           preselected << index if config.ignored_origins.include?(origin)
@@ -89,8 +89,10 @@ TEXT
       else
         origin.first.to_s.upcase
       end
-      ["#{frame_hash[:mark]} ##{frame_hash[:pos]} ",
-       "#{frame_hash[:call]} at #{frame_hash[:file]}:#{frame_hash[:line]} from #{origin_str}"]
+      # ["#{frame_hash[:mark]} ##{frame_hash[:pos]} ",
+      #  "#{frame_hash[:call]} at #{frame_hash[:file]}:#{frame_hash[:line]} from #{origin_str}"]
+      ["#{frame_hash[:mark]} ##{frame_hash[:pos]} from #{origin_str}: ",
+       "#{frame_hash[:call]}"]
     end
 
     def print_frame_line(prefix_str, info_str, origin, odd)
