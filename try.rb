@@ -1,9 +1,9 @@
 #require_relative 'lib/byebug'
 
-#require 'byebug'
-require 'pry'
+require 'byebug'
+#require 'pry'
 #require 'pry-byebug'
-#require 'byebug-zebra'
+require 'byebug-zebra'
 
 
 # binding.pry
@@ -24,8 +24,8 @@ def outer_method
 end
 
 def inner_method
-  binding.pry
   byebug
+  binding.pry
 end
 
 
