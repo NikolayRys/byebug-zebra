@@ -3,9 +3,7 @@ require 'byebug-zebra/config'
 require 'byebug-zebra/byebug_printer'
 require 'byebug/zebra_command'
 #require 'pry/z_command' if defined? PryByebug
-
-# TODO: exception extending policy?
-# class Error < StandardError; end
+# stuff for pry if Pry present - depends on library availability
 
 module ByebugZebra
 
