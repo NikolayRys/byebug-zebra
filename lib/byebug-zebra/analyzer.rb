@@ -22,17 +22,19 @@ module ByebugZebra
 
       if frame._binding.nil? # Byebug method, needs generalization
         [:native, frame.file]
-      elsif (origin_pair = config.known_libs.detect{|_name, lib_path| belongs_to_path?(frame_path, lib_path)})
-        [:lib, origin_pair.first]
-      elsif belongs_to_path?(frame_path, config.root)
-        [:application]
-      elsif (gem_pair = loaded_external_gems.detect{|_name, gem_path| belongs_to_path?(frame_path, gem_path) })
-        [:gem, gem_pair.first]
+      elsif (lib_name = config.known_libs.detect{|_name, lib_path| belongs_to_path?(frame_path, lib_path)}&.first)
+        [:lib, lib_name]
+      elsif (gem_name = loaded_external_gems.detect{|_name, gem_path| belongs_to_path?(frame_path, gem_path) }&.first)
+        # Loaded gems can be a part of the application folder, so we need to exclude them before
+        [:gem, gem_name]
       elsif false # TODO: Add vendor gems detection
         # Detect vendor/bundle gems: https://stackoverflow.com/questions/19961821/why-bundle-install-is-installing-gems-in-vendor-bundle
         [:bundle_gem, '?gem_name?']
-
+        # TODO: Exclude gems from vendor/bundle if they are in the same application
+        # :manually_installed?,
+        # Can vendor/bundle coexist with gems installed in the system?
       elsif false
+        [:bins, '?bin_name?']
         # TODO: Add bins detection /Users/nikolay/.rvm/gems/ruby-2.7.2/bin/* (try with https://github.com/rvm/executable-hooks)
         #!/usr/bin/env ruby_executable_hooks
         #
@@ -45,6 +47,8 @@ module ByebugZebra
         [:stdlib, std_name]
       elsif belongs_to_path?(frame_path, RUBY_DIR)
         [:core, frame.file]
+      elsif belongs_to_path?(frame_path, config.root)
+        [:application]
       else
         [:unknown, frame.file]
       end
