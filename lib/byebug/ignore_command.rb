@@ -40,8 +40,7 @@ module Byebug
     end
 
     def execute
-
-
+      # TODO: TTY prompt cycling
     end
 
     private
@@ -50,5 +49,3 @@ module Byebug
     end
   end
 end
-
-
