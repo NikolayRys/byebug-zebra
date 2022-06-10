@@ -33,7 +33,7 @@ TEXT
       }
     end
 
-    def print_striped_backtrace
+    def print_zebra
       prev_origin = nil
       odd = false
       unknown_detected = false
@@ -49,10 +49,12 @@ TEXT
         unknown_detected = true if origin.first == :unknown
         odd = !odd unless origin == prev_origin
         prev_origin = origin
+        # TODO: make Zebra::Frame into a class
         parsed_frames << str_parts(frame, origin).concat([origin, odd])
       end
-      puts ColorizedString[ORIGIN_WARNING].colorize(config.warn_color) if unknown_detected
-      parsed_frames.each { |frame_args| print_frame_line(*frame_args) }
+      print_unknown_warning if unknown_detected
+      # TODO: switch to the named arguments and hash syntax
+      parsed_frames.each { |frame_args| print_frame_line(*frame_args) if config.ignored_origins.exclude?(frame_args[2]) }
 
       filter_prompt
 
@@ -60,14 +62,23 @@ TEXT
 
     private
 
-    def filter_prompt
-      TTY::Prompt.new.multi_select('Which sources should zebra ignore?', cycle: true) do |menu|
-        menu.default 1
+    def print_unknown_warning
+      STDOUT.puts(ColorizedString[ORIGIN_WARNING].colorize(config.warn_color))
+    end
 
-        @origins.uniq.each do |origin|
-          menu.choice origin
+    TTY_COUNT_OFFSET = 1
+
+    def filter_prompt
+      selection = TTY::Prompt.new.multi_select('Which sources should zebra ignore?', cycle: true) do |menu|
+        preselected = []
+        @origins.uniq.each.with_index(TTY_COUNT_OFFSET) do |origin, index|
+          preselected << index if config.ignored_origins.include?(origin)
+          menu.choice(name: origin, value: origin) # Because name becomes a string
         end
+        menu.default(*preselected)
       end
+
+      config.ignored_origins = selection
     end
 
     def str_parts(frame, origin)
