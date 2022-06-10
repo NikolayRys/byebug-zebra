@@ -15,10 +15,9 @@ module ByebugZebra
     end
 
     def self.examine_frame(frame)
-      # TODO: compare against $LOADED_FEATURES
+      # TODO: compare against $LOADED_FEATURES (whether required)
       # TODO: refactor frame.file to frame_path
-      puts 'HERE'
-      puts frame.file
+      # TODO: Bundler.bundle_path for vendor
       frame_path = Pathname.new(frame.file)
 
       if frame._binding.nil? # Byebug method, needs generalization
@@ -31,7 +30,7 @@ module ByebugZebra
         [:gem, gem_pair.first]
       elsif false # TODO: Add vendor gems detection
         # Detect vendor/bundle gems: https://stackoverflow.com/questions/19961821/why-bundle-install-is-installing-gems-in-vendor-bundle
-        [:vendor, 'gem_name']
+        [:bundle_gem, '?gem_name?']
 
       elsif false
         # TODO: Add bins detection /Users/nikolay/.rvm/gems/ruby-2.7.2/bin/* (try with https://github.com/rvm/executable-hooks)
