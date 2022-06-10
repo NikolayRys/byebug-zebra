@@ -1,4 +1,4 @@
-# ByebugZebra
+# StackZebra
 ![logo.png](logo.png)
 
 Start stack trace analyzer and navigator for Byebug, Pry and PryByebug. Alpha version.
