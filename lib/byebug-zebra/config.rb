@@ -4,7 +4,7 @@ module ByebugZebra
   class Config
 
     # Colors that can be used: ColorizedString.colors
-    attr_accessor :root, :odd_color, :even_color, :warn_color
+    attr_accessor :root, :odd_color, :even_color, :warn_color, :ignored_origins
     attr_reader :known_libs, :stdlib_names
 
     def initialize
@@ -14,6 +14,7 @@ module ByebugZebra
       @warn_color = :red
       @known_libs = {}
       @stdlib_names = (Dir.entries(RbConfig::CONFIG['rubylibdir']) - ['.', '..', RbConfig::CONFIG['arch']]).map{|file| File.basename(file, File.extname(file))}.uniq
+      @ignored_origins = []
     end
 
     ROOT_WARNING = <<-DESCRIPTION
