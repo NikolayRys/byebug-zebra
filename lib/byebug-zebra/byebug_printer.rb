@@ -7,11 +7,8 @@ require 'byebug-zebra/analyzer'
 module ByebugZebra
   class ByebugPrinter
 
-    RUBY_DIR   = RbConfig::CONFIG['prefix']
-    STDLIB_DIR = Pathname.new(RbConfig::CONFIG['rubylibdir'])
-
     ORIGIN_WARNING  = <<-TEXT
-WARNING: Origin of some stack frames have not been recognized. Specify them in the config. Example:
+WARNING: This origin is not known to zebra. Please add it to the config file. Example:
   ByebugZebra.config do |config|
     config.known_libs = {lib1: '/abs/path/to/your/lib1', lib2: '/abs/path/to/your/lib2' }
   end
@@ -21,7 +18,6 @@ TEXT
       @context = context
 
       # TODO: cache on load in config
-      @loaded_external_gems  = Gem.loaded_specs.values.reject(&:default_gem?).map{|spec| [spec.name, Pathname.new(spec.full_gem_path)]}
 
       @schemes = {
         odd: {
@@ -47,7 +43,7 @@ TEXT
       parsed_frames = []
       @context.stack_size.times do |index|
         frame = Byebug::Frame.new(@context, index)
-        origin = analyze_origin(frame) # Move to the module
+        origin = Analyzer.examine_frame(frame) # Move to the module
         @origins << origin
 
         unknown_detected = true if origin.first == :unknown
@@ -93,10 +89,6 @@ TEXT
       puts ColorizedString[prefix_str].colorize(@schemes[scheme_group][:basic]) +
         ColorizedString[info_str].colorize(@schemes[scheme_group][info_scheme])
     end
-
-    # TODO: move out to analyzer
-
-    # ---------
 
     def config
       ByebugZebra.config
